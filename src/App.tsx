@@ -22,7 +22,7 @@ const App: Component = () => {
 
   const targetKm = 30_000;
   // TODO dynamic
-  const [currentKm] = createSignal(12_225);
+  const [currentKm] = createSignal(12_503);
   const diffKm = () => targetKm - currentKm();
 
   const kmPerDayDynamic = () =>
