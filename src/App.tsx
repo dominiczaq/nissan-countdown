@@ -22,8 +22,12 @@ const App: Component = () => {
 
   const targetKm = 30_000;
   // TODO dynamic
-  const [currentKm] = createSignal(12_503);
-  const diffKm = () => targetKm - currentKm();
+  const [currentKm] = createSignal([
+    { updatedAt: new Date("2024-01-31T12:09"), value: 12_604 },
+    { updatedAt: new Date("2024-01-30T13:21"), value: 12_503 },
+  ]);
+  const lastUpdate = currentKm()[0];
+  const diffKm = () => targetKm - lastUpdate?.value;
 
   const kmPerDayDynamic = () =>
     Math.round((diffKm() / timeDiffInSeconds()) * 60 * 60 * 24 * 100) / 100;
@@ -36,6 +40,10 @@ const App: Component = () => {
         <p>Do przejechania: {diffKm()} km</p>
         <p>
           Zostało: {timeDiffInSeconds()} sekund / {timeDiffInDays()} dni
+        </p>
+        <p>
+          Ostatnia aktualizacja: {lastUpdate?.updatedAt.toLocaleString()} -{" "}
+          {lastUpdate?.value}km
         </p>
       </header>
     </div>
