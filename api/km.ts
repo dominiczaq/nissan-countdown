@@ -16,6 +16,11 @@ export default async function handler(
 }
 
 async function post(request: VercelRequest, response: VercelResponse) {
+  const secret = request.headers["secret-header"];
+  if (secret !== process.env.SECRET_HEADER) {
+    console.error("Unauthorized access", secret);
+    return response.status(401);
+  }
   const insertSchema = z.object({
     updatedAt: z.string().datetime(),
     value: z.coerce.number(),
