@@ -2,7 +2,7 @@ import z from "zod";
 
 const fetchKmSchema = z.array(
   z.object({
-    updatedAt: z.string().datetime(),
+    updated_at: z.string().datetime(),
     value: z.number(),
   })
 );
@@ -10,5 +10,12 @@ const fetchKmSchema = z.array(
 export async function fetchKm() {
   return fetch("/api/km")
     .then((data) => data.json())
-    .then((data) => fetchKmSchema.parse(data));
+    .then((data) =>
+      fetchKmSchema
+        .parse(data)
+        .map((parsed) => ({
+          value: parsed.value,
+          updatedAt: parsed.updated_at,
+        }))
+    );
 }
