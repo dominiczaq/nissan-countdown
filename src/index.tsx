@@ -1,5 +1,7 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
+import { lazy } from "solid-js";
+import { Route, Router } from "@solidjs/router";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 
@@ -16,10 +18,18 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 
 const queryClient = new QueryClient();
 
+const Authorized = lazy(() => import("./Authorized"));
+const Add = lazy(() => import("./Add"));
+
 render(
   () => (
     <QueryClientProvider client={queryClient}>
-      <App />
+      <Router>
+        <Route path="/" component={App} />
+        <Route path="/admin" component={Authorized}>
+          <Route path="/add" component={Add} />
+        </Route>
+      </Router>
     </QueryClientProvider>
   ),
   root!
