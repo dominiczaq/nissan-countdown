@@ -22,6 +22,7 @@ const App: Component = () => {
   onCleanup(() => {
     clearInterval(interval);
   });
+
   const timeDiffInSeconds = createMemo(() =>
     Math.round((endDate.getTime() - date().getTime()) / 1000)
   );
