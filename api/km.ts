@@ -16,20 +16,30 @@ export default async function handler(
 }
 
 async function post(request: VercelRequest, response: VercelResponse) {
-  const secret = request.headers["secret-header"];
-  if (secret !== process.env.SECRET_HEADER) {
-    console.error("Unauthorized access", secret);
-    return response.status(401);
-  }
   const insertSchema = z.object({
-    updatedAt: z.string().datetime(),
+    // updatedAt: z.string().datetime(),
     value: z.coerce.number(),
   });
-  const { updatedAt, value } = insertSchema.parse(request.body);
-  const { rowCount } =
-    await sql`INSERT INTO km_entries (updated_at, value) VALUES (${updatedAt}, ${value})`;
+  const { value } = insertSchema.parse(request.body);
+  console.log("value", value);
+  return response.status(200).json({
+    value,
+    updatedAt: new Date().toISOString(),
+  });
+  // const secret = request.headers["secret-header"];
+  // if (secret !== process.env.SECRET_HEADER) {
+  //   console.error("Unauthorized access", secret);
+  //   return response.status(401);
+  // }
+  // const insertSchema = z.object({
+  //   updatedAt: z.string().datetime(),
+  //   value: z.coerce.number(),
+  // });
+  // const { updatedAt, value } = insertSchema.parse(request.body);
+  // const { rowCount } =
+  //   await sql`INSERT INTO km_entries (updated_at, value) VALUES (${updatedAt}, ${value})`;
 
-  return response.status(200).json(rowCount);
+  // return response.status(200).json(rowCount);
 }
 
 // table initialized with create table below

@@ -45,30 +45,28 @@ const App: Component = () => {
     Math.round((diffKm() / timeDiffInSeconds()) * 60 * 60 * 24 * 100) / 100;
 
   return (
-    <div class={styles.App}>
-      <header class={styles.header}>
-        <img src={logo} class={styles.logo} alt="logo" />
-        <Switch fallback={<p>Brak danych</p>}>
-          <Match when={query.isPending}>
-            <Puff color="#FFF" />
-          </Match>
-          <Match when={query.isError}>
-            <p>Error: {query.error?.message}</p>
-          </Match>
-          <Match when={query.isSuccess && query.data.length > 0}>
-            <p>Dziennie do przejechania: {kmPerDayDynamic()} km</p>
-            <p>Do przejechania: {diffKm()} km</p>
-            <p>
-              Zostało: {timeDiffInSeconds()} sekund / {timeDiffInDays()} dni
-            </p>
-            <p>
-              Ostatnia aktualizacja: {lastUpdate()?.updatedAt.toLocaleString()}{" "}
-              - {lastUpdate()?.value}km
-            </p>
-          </Match>
-        </Switch>
-      </header>
-    </div>
+    <>
+      <img src={logo} class={styles.logo} alt="logo" />
+      <Switch fallback={<p>Brak danych</p>}>
+        <Match when={query.isPending}>
+          <Puff color="#FFF" />
+        </Match>
+        <Match when={query.isError}>
+          <p>Error: {query.error?.message}</p>
+        </Match>
+        <Match when={query.isSuccess && query.data.length > 0}>
+          <p>Dziennie do przejechania: {kmPerDayDynamic()} km</p>
+          <p>Do przejechania: {diffKm()} km</p>
+          <p>
+            Zostało: {timeDiffInSeconds()} sekund / {timeDiffInDays()} dni
+          </p>
+          <p>
+            Ostatnia aktualizacja: {lastUpdate()?.updatedAt.toLocaleString()} -{" "}
+            {lastUpdate()?.value}km
+          </p>
+        </Match>
+      </Switch>
+    </>
   );
 };
 

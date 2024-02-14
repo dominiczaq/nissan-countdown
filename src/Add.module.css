@@ -1,0 +1,35 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 30%;
+  align-items: center;
+}
+
+.input {
+  background-color: #686275;
+  padding: 1em;
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.submit {
+  background-color: #8f7f96;
+  padding: 1em;
+  border: none;
+  border-radius: 4px;
+  width: 80%;
+}
+
+.successModal {
+  background: #8cd881;
+  padding: 0.5em 1em;
+  font-size: 0.7em;
+}
+
+.errorModal {
+  background: red;
+  padding: 0.5em 1em;
+  font-size: 0.7em;
+}
