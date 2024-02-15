@@ -1,10 +1,13 @@
 import { createSignal, type Component, Switch, Match, Show } from "solid-js";
 
-import styles from "./App.module.css";
 import addStyles from "./Add.module.css";
-import { createMutation } from "@tanstack/solid-query";
+import { createMutation, useQueryClient } from "@tanstack/solid-query";
+import { observeQueryData } from "./utils/observeQueryData";
 
 const Add: Component = () => {
+  const queryClient = useQueryClient();
+  // TODO remove
+  observeQueryData(["km"]);
   const [val, setVal] = createSignal("");
 
   const mutation = createMutation(() => ({
@@ -16,8 +19,10 @@ const Add: Component = () => {
         headers: { "Content-type": "application/json" },
       });
     },
-    onSuccess: (res) => {
-      console.log(res);
+    onSuccess: async (res) => {
+      const data = queryClient.getQueryData(["km"] || []);
+      const response = await res.json();
+      queryClient.setQueryData(["km"], [response].concat(data));
     },
   }));
 

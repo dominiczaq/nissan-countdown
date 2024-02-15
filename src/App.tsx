@@ -5,22 +5,25 @@ import {
   createMemo,
   Switch,
   Match,
+  createEffect,
 } from "solid-js";
 import { Puff } from "solid-spinner";
+import { useQueryClient } from "@tanstack/solid-query";
 import { createQuery } from "@tanstack/solid-query";
 
 import logo from "./logo.svg";
 import styles from "./App.module.css";
 import { fetchKm } from "./queries";
+import { observeQueryData } from "./utils/observeQueryData";
 
 const App: Component = () => {
   const endDate = new Date("2024-10-01");
   const [date, setDate] = createSignal(new Date());
-  const interval = setInterval(() => {
+  const dateInterval = setInterval(() => {
     setDate(new Date());
-  });
+  }, 1000);
   onCleanup(() => {
-    clearInterval(interval);
+    clearInterval(dateInterval);
   });
 
   const timeDiffInSeconds = createMemo(() =>
@@ -34,6 +37,7 @@ const App: Component = () => {
   const query = createQuery(() => ({
     queryKey: ["km"],
     queryFn: fetchKm,
+    staleTime: 60 * 60 * 1000,
   }));
 
   const targetKm = 30_000;
@@ -43,6 +47,9 @@ const App: Component = () => {
 
   const kmPerDayDynamic = () =>
     Math.round((diffKm() / timeDiffInSeconds()) * 60 * 60 * 24 * 100) / 100;
+
+  // TODO remove
+  observeQueryData(["km"]);
 
   return (
     <>
