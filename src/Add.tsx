@@ -1,14 +1,22 @@
-import { createSignal, type Component, Switch, Match, Show } from "solid-js";
+import {
+  createSignal,
+  type Component,
+  Switch,
+  Match,
+  Show,
+  useContext,
+} from "solid-js";
 
 import addStyles from "./Add.module.css";
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { observeQueryData } from "./utils/observeQueryData";
+import { SessionContext } from "./Authorized";
 
 const Add: Component = () => {
   const queryClient = useQueryClient();
-  // TODO remove
-  observeQueryData(["km"]);
+  // observeQueryData(["km"]);
   const [val, setVal] = createSignal("");
+  const session = useContext(SessionContext);
 
   const mutation = createMutation(() => ({
     mutationKey: ["km"],
@@ -16,7 +24,10 @@ const Add: Component = () => {
       return fetch("/api/km", {
         method: "POST",
         body: JSON.stringify({ value }),
-        headers: { "Content-type": "application/json" },
+        headers: {
+          "Content-type": "application/json",
+          Session: session?.access_token || "",
+        },
       });
     },
     onSuccess: async (res) => {

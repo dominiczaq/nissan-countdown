@@ -48,8 +48,7 @@ const App: Component = () => {
   const kmPerDayDynamic = () =>
     Math.round((diffKm() / timeDiffInSeconds()) * 60 * 60 * 24 * 100) / 100;
 
-  // TODO remove
-  observeQueryData(["km"]);
+  // observeQueryData(["km"]);
 
   return (
     <>

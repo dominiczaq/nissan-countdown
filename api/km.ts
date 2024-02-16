@@ -1,6 +1,12 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "@vercel/postgres";
 import { z } from "zod";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.VITE_SUPABASE_URL,
+  process.env.VITE_SUPABASE_KEY
+);
 
 export default async function handler(
   request: VercelRequest,
@@ -16,30 +22,30 @@ export default async function handler(
 }
 
 async function post(request: VercelRequest, response: VercelResponse) {
+  const sessionJwt = request.headers["session"];
+  if (typeof sessionJwt !== "string") {
+    return response.status(401);
+  }
+  const {
+    data: { user },
+  } = await supabase.auth.getUser(sessionJwt);
+  if (!user || user.role !== "authenticated" || !user.email) {
+    return response.status(401);
+  }
   const insertSchema = z.object({
-    // updatedAt: z.string().datetime(),
     value: z.coerce.number(),
   });
   const { value } = insertSchema.parse(request.body);
-  console.log("value", value);
+  const updatedAt = new Date().toISOString();
+  const addedBy = user.email;
+  const { rowCount } =
+    await sql`INSERT INTO km_entries (updated_at, value, added_by) VALUES (${updatedAt}, ${value}, ${addedBy})`;
+
   return response.status(200).json({
     value,
-    updatedAt: new Date().toISOString(),
+    updatedAt,
+    addedBy,
   });
-  // const secret = request.headers["secret-header"];
-  // if (secret !== process.env.SECRET_HEADER) {
-  //   console.error("Unauthorized access", secret);
-  //   return response.status(401);
-  // }
-  // const insertSchema = z.object({
-  //   updatedAt: z.string().datetime(),
-  //   value: z.coerce.number(),
-  // });
-  // const { updatedAt, value } = insertSchema.parse(request.body);
-  // const { rowCount } =
-  //   await sql`INSERT INTO km_entries (updated_at, value) VALUES (${updatedAt}, ${value})`;
-
-  // return response.status(200).json(rowCount);
 }
 
 // table initialized with create table below
@@ -49,4 +55,7 @@ const res = await sql`CREATE TABLE km_entries (
     updatedAt TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     value INTEGER NOT NULL
 );`;
+
+const res =
+    await sql`alter TABLE km_entries ADD COLUMN added_by VARCHAR(255) DEFAULT '';`;
 */

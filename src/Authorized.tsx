@@ -1,7 +1,12 @@
-import { createResource, type Component, Match, Switch } from "solid-js";
+import {
+  createResource,
+  type Component,
+  Match,
+  Switch,
+  createContext,
+} from "solid-js";
 
-import styles from "./App.module.css";
-import { createClient } from "@supabase/supabase-js";
+import { Session, createClient } from "@supabase/supabase-js";
 import { RouteSectionProps } from "@solidjs/router";
 import { Puff } from "solid-spinner";
 
@@ -9,6 +14,8 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_KEY
 );
+
+export const SessionContext = createContext<null | Session>(null);
 
 const Authorized: Component<RouteSectionProps<unknown>> = (props) => {
   const [sessionData] = createResource(async () => {
@@ -31,7 +38,11 @@ const Authorized: Component<RouteSectionProps<unknown>> = (props) => {
       <Match when={sessionData()?.data?.session === null}>
         <div>Nie zalogowano!</div>
       </Match>
-      <Match when={sessionData()?.data?.session}>{props.children}</Match>
+      <Match when={sessionData()?.data?.session}>
+        <SessionContext.Provider value={sessionData()?.data.session || null}>
+          {props.children}
+        </SessionContext.Provider>
+      </Match>
     </Switch>
   );
 };
