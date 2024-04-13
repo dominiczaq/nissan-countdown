@@ -15,6 +15,7 @@ import logo from "./logo.svg";
 import styles from "./App.module.css";
 import { fetchKm } from "./queries";
 import { observeQueryData } from "./utils/observeQueryData";
+import { monthDiff } from "./utils/diffInMonths";
 
 const App: Component = () => {
   const endDate = new Date("2024-10-01");
@@ -33,6 +34,8 @@ const App: Component = () => {
   const timeDiffInDays = createMemo(() =>
     Math.round(timeDiffInSeconds() / 60 / 60 / 24)
   );
+
+  const timeDiffInMonths = createMemo(() => monthDiff(date(), endDate));
 
   const query = createQuery(() => ({
     queryKey: ["km"],
@@ -64,7 +67,9 @@ const App: Component = () => {
           <p>Dziennie do przejechania: {kmPerDayDynamic()} km</p>
           <p>Do przejechania: {diffKm()} km</p>
           <p>
-            Zostało: {timeDiffInSeconds()} sekund / {timeDiffInDays()} dni
+            {/* Zostało: {timeDiffInSeconds()} sekund / {timeDiffInDays()} dni */}
+            Zostało: {parseFloat(String(timeDiffInMonths())).toFixed(2)}{" "}
+            miesięcy / {timeDiffInDays()} dni
           </p>
           <p>
             Ostatnia aktualizacja: {lastUpdate()?.updatedAt.toLocaleString()} -{" "}
