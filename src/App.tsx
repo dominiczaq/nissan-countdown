@@ -71,8 +71,10 @@ const App: Component = () => {
             Zostało: {parseFloat(String(timeDiffInMonths())).toFixed(2)}{" "}
             miesięcy / {timeDiffInDays()} dni
           </p>
+          <p>Data zakończenia {endDate.toLocaleDateString()}</p>
           <p>
-            Ostatnia aktualizacja: {lastUpdate()?.updatedAt.toLocaleString()} -{" "}
+            Ostatnia aktualizacja:{" "}
+            {new Date(lastUpdate()?.updatedAt).toLocaleString()} -{" "}
             {lastUpdate()?.value}km
           </p>
         </Match>
