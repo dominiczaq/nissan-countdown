@@ -18,7 +18,7 @@ import { observeQueryData } from "./utils/observeQueryData";
 import { monthDiff } from "./utils/diffInMonths";
 
 const App: Component = () => {
-  const endDate = new Date("2024-10-01");
+  const endDate = new Date("2024-09-25");
   const [date, setDate] = createSignal(new Date());
   const dateInterval = setInterval(() => {
     setDate(new Date());
@@ -66,11 +66,11 @@ const App: Component = () => {
         <Match when={query.isSuccess && query.data.length > 0}>
           <p>Dziennie do przejechania: {kmPerDayDynamic()} km</p>
           <p>Do przejechania: {diffKm()} km</p>
-          <p>
-            {/* Zostało: {timeDiffInSeconds()} sekund / {timeDiffInDays()} dni */}
-            Zostało: {parseFloat(String(timeDiffInMonths())).toFixed(2)}{" "}
-            miesięcy / {timeDiffInDays()} dni
-          </p>
+          {/* <p> */}
+          {/* Zostało: {timeDiffInSeconds()} sekund / {timeDiffInDays()} dni */}
+          {/* Zostało: {parseFloat(String(timeDiffInMonths())).toFixed(2)}{" "} */}
+          {/* miesięcy / {timeDiffInDays()} dni */}
+          {/* </p> */}
           <p>Data zakończenia {endDate.toLocaleDateString()}</p>
           <p>
             Ostatnia aktualizacja:{" "}
